@@ -47,6 +47,7 @@ const UserPost = () =>{
        	 			</Flex>
        	 			<Flex gap={4} alignItem={"center"}>
        	 				<Text fontStyle={"sm"} color={"gray.light"}>1d</Text>
+       	 			    
        	 			</Flex>
        	 		</Flex>
        	 	</Flex>
