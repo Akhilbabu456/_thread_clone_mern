@@ -13,7 +13,7 @@ import {
     Text,
     useColorModeValue,
     Link,
-    useToast,
+  
   } from '@chakra-ui/react'
   import { useState } from 'react'
   import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
@@ -56,7 +56,7 @@ import userAtom from '../atoms/userAtom'
           localStorage.setItem("user-threads", JSON.stringify(data))
           setUser(data)
        } catch (error) {
-         console.log(`Error at handleSignup ${error}`)
+         showToast("Error", error, "error")
        }
     }
   
