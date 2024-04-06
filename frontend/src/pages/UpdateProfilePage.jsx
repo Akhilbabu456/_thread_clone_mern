@@ -16,6 +16,8 @@ import {
 import { useRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import userAtom from '../atoms/userAtom'
+import usePreviewImg from '../hooks/usePreviewImg'
+import useShowToast from '../hooks/useShowToast'
  
   
   export default function UpdateProfilePage() {
@@ -28,8 +30,42 @@ import userAtom from '../atoms/userAtom'
       password: "",
     })
     const fileRef = useRef(null)
+    const [updating, setUpdating] = useState(false)
+    const showToast = useShowToast()
+
+    const {handleImageChange, imgUrl} = usePreviewImg()
+  
+
+    const handleSubmit = async(e) => {
+      e.preventDefault()
+      if(updating) return
+      setUpdating(true)
+      try{
+        const res = await fetch(`/api/users/update/${user._id}`, {
+          method: "PUT",
+          headers:{
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({...inputs, profilePic: imgUrl})
+        }) 
+        const data = await res.json()
+        if(data.error){
+          showToast("Error", data.error, "error")
+        }else{
+          showToast("Success", "Profile updated successfully", "success")
+          setUser(data)
+          localStorage.setItem("user-threads", JSON.stringify(data))
+        }
+      }catch(error){
+           showToast("Error", error, "error")
+      }finally{
+        setUpdating(false)
+      }
+
+    }
 
     return (
+      <form onSubmit={handleSubmit}>
       <Flex
         align={'center'}
         justify={'center'}
@@ -51,16 +87,16 @@ import userAtom from '../atoms/userAtom'
            
             <Stack direction={['column', 'row']} spacing={6}>
               <Center>
-                <Avatar size="xl" src={user.profilePic}/>
+                <Avatar size="xl" boxShadow={"md"} src={imgUrl || user.profilePic}/>
                   
               </Center>
               <Center w="full">
                 <Button w="full" onClick={()=> fileRef.current.click()}>Change Avatar</Button>
-                <Input type='file' hidden ref={fileRef}/>
+                <Input type='file' hidden ref={fileRef} onChange={handleImageChange}/>
               </Center>
             </Stack>
           </FormControl>
-          <FormControl isRequired>
+          <FormControl>
             <FormLabel>Full name</FormLabel>
             <Input
               placeholder="Full Name"
@@ -70,7 +106,7 @@ import userAtom from '../atoms/userAtom'
               onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
             />
           </FormControl>
-          <FormControl isRequired>
+          <FormControl>
             <FormLabel>User name</FormLabel>
             <Input
               placeholder="User Name"
@@ -80,7 +116,7 @@ import userAtom from '../atoms/userAtom'
               onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
             />
           </FormControl>
-          <FormControl isRequired>
+          <FormControl>
             <FormLabel>Email address</FormLabel>
             <Input
               placeholder="your-email@example.com"
@@ -90,7 +126,7 @@ import userAtom from '../atoms/userAtom'
               onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
             />
           </FormControl>
-          <FormControl isRequired>
+          <FormControl>
             <FormLabel>Bio</FormLabel>
             <Input
               placeholder="your-bio"
@@ -100,7 +136,7 @@ import userAtom from '../atoms/userAtom'
               onChange={(e) => setInputs({ ...inputs, bio: e.target.value })}
             />
           </FormControl>
-          <FormControl isRequired>
+          <FormControl>
             <FormLabel>Password</FormLabel>
             <Input
               placeholder="password"
@@ -126,11 +162,15 @@ import userAtom from '../atoms/userAtom'
               w="full"
               _hover={{
                 bg: 'green.500',
-              }}>
+              }}
+              type='submit'
+              isLoading={updating}
+              >
               Submit
             </Button>
           </Stack>
         </Stack>
       </Flex>
+      </form>
     )
   }
