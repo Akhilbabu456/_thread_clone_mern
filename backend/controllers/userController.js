@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
 const cloudinary = require('cloudinary').v2;
-
+const mongoose = require("mongoose")
 
 const signupUser = async (req, res) => {
   try {
@@ -166,11 +166,18 @@ const updateUser = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const username = req.params.username;
+  const query = req.params.query;
   try {
-    const user = await User.findOne({ username })
+    let user
+
+    if(mongoose.Types.ObjectId.isValid(query)){
+      user = await User.findOne({_id: query}).select("-password").select("-updatedAt")
+    }else{
+      user = await User.findOne({ username: query })
       .select("-password")
       .select("-updatedAt");
+    }
+    
     if (!user) {
       return res.status(400).json({ error: "User not found" });
     }

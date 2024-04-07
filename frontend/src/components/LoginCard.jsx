@@ -29,8 +29,10 @@ import userAtom from '../atoms/userAtom'
       password: "",
     })
     const showToast = useShowToast()
+    const [loading, setLoading] = useState(false)
 
     const handleLogin = async()=>{
+      setLoading(true)
       try {
         const res = await fetch("/api/users/login",{
           method: "POST",
@@ -52,6 +54,8 @@ import userAtom from '../atoms/userAtom'
 
       } catch (error) {
         showToast("Error", error, "error")
+      }finally{
+        setLoading(false)
       }
     }
     
@@ -101,7 +105,7 @@ import userAtom from '../atoms/userAtom'
               </FormControl>
               <Stack spacing={10} pt={2}>
                 <Button
-                  loadingText="Submitting"
+                  loadingText="Logging in"
                   size="lg"
                   bg={useColorModeValue("gray.600", "gray.700")}
                   color={'white'}
@@ -109,6 +113,7 @@ import userAtom from '../atoms/userAtom'
                     bg: useColorModeValue("gray.700", "gray.800"),
                   }}
                   onClick={handleLogin}
+                  isLoading={loading}
                   >
                   Login
                 </Button>

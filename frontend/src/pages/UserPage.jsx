@@ -4,12 +4,14 @@ import UserPost from "../components/UserPost"
 import {useParams } from "react-router-dom"
 import { useEffect } from "react"
 import useShowToast from "../hooks/useShowToast"
+import {Flex,Spinner} from "@chakra-ui/react"
 
 
 const UserPage = () => {
   const [user, setUser] = useState(null)
   const {username} = useParams()
   const showToast = useShowToast()
+  const [loading, setLoading] = useState(true)
 
   useEffect(()=>{
      const getUser = async()=>{
@@ -24,20 +26,29 @@ const UserPage = () => {
           }catch(error){
               
             showToast("Error", error, "error")
+       }finally{
+        setLoading(false)
        }
      }
      getUser()
   }, [username, showToast])
 
-  if(!user) return null
+  if(!user && loading){
+    return(
+      <Flex justifyContent={"center"}>
+        <Spinner size="xl"/>
+
+      </Flex>
+    )
+  }
+
+  if(!user && !loading) return <h1>User not found</h1>
    
+  
   return (
     <>
       <UserHeader user={user}/>
-      <UserPost likes={1200} replies={481} postImg="/post1.png" postTitle="Lets talk about Threads."/>
-      <UserPost likes={120} replies={41} postImg="/post2.png" postTitle="Nice tutorial."/>
-      <UserPost likes={200} replies={81} postImg="/post3.png" postTitle="I love this guy."/>
-      <UserPost likes={100} replies={48} postTitle="This is my first Threads."/>
+     
     </>
   )
 }

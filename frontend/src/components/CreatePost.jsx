@@ -16,6 +16,7 @@ const CreatePost = () => {
     const [ remainingChar, setRemainingChar] = useState(MAX_CHAR)
     const user = useRecoilValue(userAtom)
     const showToast = useShowToast()
+    const [loading, setLoading] = useState(false)
 
     const handleTextChange = (e)=>{
       const inputText = e.target.value
@@ -31,6 +32,8 @@ const CreatePost = () => {
     }
 
     const handleCreatePost = async()=>{
+      setLoading(true)
+       try{
         const res = await fetch("/api/posts/create", {
           method: "POST",
           headers:{
@@ -44,13 +47,20 @@ const CreatePost = () => {
         })
 
         const data = await res.json()
-
+ 
         if(data.error){
           showToast("Error", data.error, "error")
           return
         }
         showToast("Success", "Post created successfully", "success")
         onClose()
+        setPostText("")
+        setImgUrl("")
+       }catch(error){
+        showToast("Error", error, "error")
+       }finally{
+        setLoading(false)
+       }
     }
 
   return (
@@ -117,7 +127,7 @@ const CreatePost = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={handleCreatePost}>
+            <Button colorScheme='blue' mr={3} isLoading={loading} onClick={handleCreatePost}>
               Post
             </Button>
             
