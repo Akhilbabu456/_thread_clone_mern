@@ -1,16 +1,16 @@
-import { Avatar, Box, Flex, Menu, MenuButton, MenuItem, MenuList, Portal, Text, VStack, useToast, Button } from "@chakra-ui/react"
+import { Avatar, Box, Flex, Menu, MenuButton, Link, MenuItem, MenuList, Portal, Text, VStack, useToast, Button } from "@chakra-ui/react"
 import {BsInstagram} from "react-icons/bs"
 import {CgMoreO} from "react-icons/cg"
 import userAtom from "../atoms/userAtom"
 import { useRecoilValue } from "recoil"
-import { Link } from "react-router-dom"
+import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react"
 import useShowToast from "../hooks/useShowToast"
 
 const UserHeader = ({user}) => {
     const toast = useToast()
     const currentUser = useRecoilValue(userAtom)
-    const [following , setFollowing]= useState(user.followers.includes(currentUser._id))
+    const [following , setFollowing]= useState(user.followers.includes(currentUser?._id))
     const showToast = useShowToast()
     const [updating, setUpdating] = useState(false)
 
@@ -55,7 +55,7 @@ const UserHeader = ({user}) => {
               user.followers.pop()
             }else{
               showToast("Success", `Followed ${user.name}`, "success")
-              user.followers.push(currentUser._id)
+              user.followers.push(currentUser?._id)
             }
 
             setFollowing(!following)
@@ -105,12 +105,12 @@ const UserHeader = ({user}) => {
       </Flex>
       <Text>{user.bio}</Text>
 
-      {currentUser._id === user._id && (
-      <Link  to="/update">
+      {currentUser?._id === user._id && (
+      <Link as={RouterLink}  to="/update">
       <Button size={"sm"}>Update Profile</Button>
       </Link>
       )}
-      {currentUser._id !== user._id && (
+      {currentUser?._id !== user._id && (
      
       <Button size={"sm"} onClick={handleFollowUnFollow} isLoading={updating}>{following ? "Unfollow" : "Follow"}</Button>
 

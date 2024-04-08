@@ -2,7 +2,8 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
 const cloudinary = require('cloudinary').v2;
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const Post = require("../models/postModel");
 
 const signupUser = async (req, res) => {
   try {
@@ -157,6 +158,18 @@ const updateUser = async (req, res) => {
     user.bio = bio || user.bio;
 
     user = await user.save();
+
+    await Post.updateMany(
+			{ "replies.userId": userId },
+			{
+				$set: {
+					"replies.$[reply].username": user.username,
+					"replies.$[reply].userProfilePic": user.profilePic,
+				},
+			},
+			{ arrayFilters: [{ "reply.userId": userId }] }
+		);
+
     user.password = null
     res.status(200).json( user );
   } catch (err) {
