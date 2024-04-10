@@ -31,60 +31,60 @@ const MessageInput = ({ setMessages }) => {
 	const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
 	const [isSending, setIsSending] = useState(false);
 
-	// const handleSendMessage = async (e) => {
-	// 	e.preventDefault();
-	// 	if (!messageText && !imgUrl) return;
-	// 	if (isSending) return;
+	const handleSendMessage = async (e) => {
+		e.preventDefault();
+		if (!messageText && !imgUrl) return;
+		if (isSending) return;
 
-	// 	setIsSending(true);
+		setIsSending(true);
 
-	// 	try {
-	// 		const res = await fetch("/api/messages", {
-	// 			method: "POST",
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 			},
-	// 			body: JSON.stringify({
-	// 				message: messageText,
-	// 				recipientId: selectedConversation.userId,
-	// 				img: imgUrl,
-	// 			}),
-	// 		});
-	// 		const data = await res.json();
-	// 		if (data.error) {
-	// 			showToast("Error", data.error, "error");
-	// 			return;
-	// 		}
-	// 		console.log(data);
-	// 		setMessages((messages) => [...messages, data]);
+		try {
+			const res = await fetch("/api/message", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					message: messageText,
+					recipientId: selectedConversation.userId,
+					img: imgUrl,
+				}),
+			});
+			const data = await res.json();
+			if (data.error) {
+				showToast("Error", data.error, "error");
+				return;
+			}
+			console.log(data);
+			setMessages((messages) => [...messages, data]);
 
-	// 		setConversations((prevConvs) => {
-	// 			const updatedConversations = prevConvs.map((conversation) => {
-	// 				if (conversation._id === selectedConversation._id) {
-	// 					return {
-	// 						...conversation,
-	// 						lastMessage: {
-	// 							text: messageText,
-	// 							sender: data.sender,
-	// 						},
-	// 					};
-	// 				}
-	// 				return conversation;
-	// 			});
-	// 			return updatedConversations;
-	// 		});
-	// 		setMessageText("");
-	// 		setImgUrl("");
-	// 	} catch (error) {
-	// 		showToast("Error", error.message, "error");
-	// 	} finally {
-	// 		setIsSending(false);
-	// 	}
-	// };
+			setConversations((prevConvs) => {
+				const updatedConversations = prevConvs.map((conversation) => {
+					if (conversation._id === selectedConversation._id) {
+						return {
+							...conversation,
+							lastMessage: {
+								text: messageText,
+								sender: data.sender,
+							},
+						};
+					}
+					return conversation;
+				});
+				return updatedConversations;
+			});
+			setMessageText("");
+			setImgUrl("");
+		} catch (error) {
+			showToast("Error", error.message, "error");
+		} finally {
+			setIsSending(false);
+		}
+	};
 	return (
 		<Flex gap={2} alignItems={"center"}>
 			<form
-            // onSubmit={handleSendMessage} 
+            onSubmit={handleSendMessage} 
              style={{ flex: 95 }}>
 				<InputGroup>
 					<Input
@@ -94,7 +94,7 @@ const MessageInput = ({ setMessages }) => {
 						value={messageText}
 					/>
 					<InputRightElement 
-                    //onClick={handleSendMessage} 
+                    onClick={handleSendMessage} 
                     cursor={"pointer"}>
 						<IoSendSharp />
 					</InputRightElement>
@@ -122,7 +122,7 @@ const MessageInput = ({ setMessages }) => {
 						<Flex justifyContent={"flex-end"} my={2}>
 							{!isSending ? (
 								<IoSendSharp size={24} cursor={"pointer"}
-                                 //onClick={handleSendMessage} 
+                                 onClick={handleSendMessage} 
                                  />
 							) : (
 								<Spinner size={"md"} />

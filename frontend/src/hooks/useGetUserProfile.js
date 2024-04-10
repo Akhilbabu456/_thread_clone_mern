@@ -16,9 +16,14 @@ const useGetUserProfile = () => {
                const data = await res.json()
                if(data.error){
                   showToast("Error", data.error, "error")
-                 }else{
+                  return 
+                }
+                if(data.isFrozen){
+                  setUser(null)
+                  return
+                }
                    setUser(data)
-                 }
+                 
                }catch(error){
                    
                  showToast("Error", error, "error")

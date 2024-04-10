@@ -1,6 +1,6 @@
 const  Conversation  = require("../models/conversationModel")
 const Message = require("../models/messageModel")
-const { getRecipientSocketId, io } = require("socket.io");
+const { getRecipientSocketId, io } = require("../socket/socket.js");
 
 const cloudinary = require("cloudinary").v2;
 
@@ -48,10 +48,10 @@ const sendMessage = async(req,res)=>{
 			}),
 		]);
 
-		// const recipientSocketId = getRecipientSocketId(recipientId);
-		// if (recipientSocketId) {
-		// 	io.to(recipientSocketId).emit("newMessage", newMessage);
-		// }
+		const recipientSocketId = getRecipientSocketId(recipientId);
+		if (recipientSocketId) {
+			io.to(recipientSocketId).emit("newMessage", newMessage);
+		}
 
 		res.status(201).json(newMessage);
 	} catch (error) {
