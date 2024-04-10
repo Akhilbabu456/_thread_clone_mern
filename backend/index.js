@@ -1,11 +1,11 @@
 const express = require("express")
 const bodyParser = require('body-parser');
 const dotenv = require("dotenv")
-const connectDB = require("./db/connectDB")
+const connectDB = require("./db/connectDB.js")
 const cookieParser = require("cookie-parser")
-const userRoutes = require("./routes/userRoutes")
-const postRoutes = require("./routes/postRoutes")
-const messageRoutes = require("./routes/messageRoutes")
+const userRoutes = require("./routes/userRoutes.js")
+const postRoutes = require("./routes/postRoutes.js")
+const messageRoutes = require("./routes/messageRoutes.js")
 const cloudinary = require('cloudinary').v2;
 const {app,server} = require("./socket/socket.js")
 
@@ -32,3 +32,9 @@ app.use("/api/posts", postRoutes)
 app.use("/api/message", messageRoutes)
 
 server.listen(PORT, ()=> console.log(`Server started at http://localhost:${PORT}`))
+
+
+module.exports = {
+    app,
+    server
+  };
