@@ -1,4 +1,5 @@
 const express = require("express")
+const cors = require("cors")	
 const bodyParser = require('body-parser');
 const dotenv = require("dotenv")
 const connectDB = require("./db/connectDB.js")
@@ -23,6 +24,9 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
+app.use(cors({
+    origin: true,
+  }));
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
