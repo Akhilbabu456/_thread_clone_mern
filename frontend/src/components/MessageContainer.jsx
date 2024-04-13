@@ -1,11 +1,11 @@
 import { Avatar, Divider, Flex, Image, Skeleton, SkeletonCircle, Text, useColorModeValue } from "@chakra-ui/react";
-import Message from "./Message";
-import MessageInput from "./MessageInput";
+import Message from "./Message.jsx";
+import MessageInput from "./MessageInput.jsx";
 import { useEffect, useRef, useState } from "react";
-import useShowToast from "../hooks/useShowToast";
-import { conversationsAtom, selectedConversationAtom } from "../atoms/messagesAtom";
+import useShowToast from "../hooks/useShowToast.js";
+import { conversationsAtom, selectedConversationAtom } from "../atoms/messagesAtom.js";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import userAtom from "../atoms/userAtom";
+import userAtom from "../atoms/userAtom.js";
 import { useSocket } from "../context/SocketContext.jsx";
 import messageSound from "../assets/sounds/message.mp3";
 const MessageContainer = () => {

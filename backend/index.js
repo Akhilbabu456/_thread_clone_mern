@@ -1,4 +1,5 @@
 const express = require("express")
+
 const cors = require("cors")	
 const bodyParser = require('body-parser');
 const dotenv = require("dotenv")
@@ -16,6 +17,7 @@ connectDB()
 
 
 const PORT = process.env.PORT || 5000
+
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 cloudinary.config({
@@ -35,10 +37,6 @@ app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/message", messageRoutes)
 
+
+
 server.listen(PORT, ()=> console.log(`Server started at http://localhost:${PORT}`))
-
-
-module.exports = {
-    app,
-    server
-  };
