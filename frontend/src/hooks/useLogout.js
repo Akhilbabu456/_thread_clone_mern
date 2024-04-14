@@ -2,12 +2,10 @@
 import { useRecoilState } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import useShowToast from './useShowToast';
-import {useNavigate} from "react-router-dom"
 
 const useLogout = () => {
     const setUser = useRecoilState(userAtom)
     const showToast = useShowToast()
-    const navigate = useNavigate()
 
     const logout = async () => {
 		try {
@@ -24,7 +22,6 @@ const useLogout = () => {
 				return;
 			}
 
-            navigate("/auth")
 			localStorage.removeItem("user-threads");
 			setUser(null);
 		} catch (error) {
