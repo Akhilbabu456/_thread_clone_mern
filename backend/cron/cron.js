@@ -1,7 +1,7 @@
 const cron = require("cron");
 const https = require("https");
 
-const URL = "https://threads-clone-9if3.onrender.com";
+const URL = "https://thread-clone-mern.onrender.com";
 
 const job = new cron.CronJob("*/14 * * * *", function () {
 	https
