@@ -1,4 +1,4 @@
-import { Avatar, Divider, Flex, Image, Skeleton, SkeletonCircle, Text, useColorModeValue } from "@chakra-ui/react";
+import { Avatar, Button, Divider, Flex, Image, Skeleton, SkeletonCircle, Text, useColorModeValue } from "@chakra-ui/react";
 import Message from "./Message.jsx";
 import MessageInput from "./MessageInput.jsx";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +8,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom.js";
 import { useSocket } from "../context/SocketContext.jsx";
 import messageSound from "../assets/sounds/message.mp3";
+import { useNavigate } from "react-router-dom";
 const MessageContainer = () => {
 	const showToast = useShowToast();
 	const selectedConversation = useRecoilValue(selectedConversationAtom);
@@ -15,6 +16,7 @@ const MessageContainer = () => {
 	const [messages, setMessages] = useState([]);
 	const currentUser = useRecoilValue(userAtom);
 	const { socket } = useSocket();
+	const navigate = useNavigate()
 	const setConversations = useSetRecoilState(conversationsAtom);
 	const messageEndRef = useRef(null);
 
@@ -105,6 +107,10 @@ const MessageContainer = () => {
 		getMessages();
 	}, [showToast, selectedConversation.userId, selectedConversation.mock]);
 
+    const handleVideo = ()=>{
+		navigate(`/videocall?roomID=${selectedConversation._id}`)
+	}
+
 	return (
 		<Flex
 			flex='70'
@@ -114,7 +120,8 @@ const MessageContainer = () => {
 			flexDirection={"column"}
 		>
 			{/* Message header */}
-			<Flex w={"full"} h={12} alignItems={"center"} gap={2}>
+			<Flex w={"full"} h={12} alignItems={"center"} justifyContent={"space-between"} gap={2}>
+				<Flex alignItems={"center"} gap={2}>
 				<Avatar 
                 src={selectedConversation.userProfilePic} 
                 size={"sm"} />
@@ -122,8 +129,11 @@ const MessageContainer = () => {
 					{selectedConversation.username} 
                    <Image src='/verified.png' w={4} h={4} ml={1} />
 				</Text>
+				</Flex>
+				<Button onClick={handleVideo}>
+				<i className="bi bi-camera-video-fill"></i>
+				</Button>
 			</Flex>
-
 			<Divider />
 
 			<Flex flexDir={"column"} gap={4} my={4} p={2} height={"400px"} overflowY={"auto"}>

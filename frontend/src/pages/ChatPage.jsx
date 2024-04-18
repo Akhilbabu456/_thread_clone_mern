@@ -10,6 +10,7 @@ import { conversationsAtom, selectedConversationAtom } from '../atoms/messagesAt
 import userAtom from '../atoms/userAtom'
 import { useSocket } from '../context/SocketContext'
 
+
 const ChatPage = () => {
   const showToast = useShowToast()
   const [loadingConversations , setLoadingConversations] = useState(true)
@@ -19,6 +20,8 @@ const ChatPage = () => {
   const [searchingUser , setSearchingUser] = useState(false)
   const currentUser = useRecoilValue(userAtom)
   const {socket, onlineUsers} = useSocket()
+
+ 
 
   useEffect(() => {
 		socket?.on("messagesSeen", ({ conversationId }) => {
